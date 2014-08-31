@@ -19,7 +19,7 @@ public class DefaultExceptionMapper implements ExceptionMapper<Exception> {
 
     @Override
     public Response toResponse(final Exception e) {
-        final ServerError serverError = new ServerError(HttpStatus.INTERNAL_SERVER_ERROR_500.getStatusCode(), e.getMessage());
+        final ServerError serverError = new ServerError(HttpStatus.INTERNAL_SERVER_ERROR_500.getStatusCode(), e.toString());
         return Response.status(HttpStatus.INTERNAL_SERVER_ERROR_500.getStatusCode()).entity(serverError).type(MediaType.APPLICATION_JSON).build();
     }
 }

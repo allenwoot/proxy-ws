@@ -36,9 +36,6 @@ public enum InMemoryDataProvider implements DataProvider {
         return this.allRequests.add(proxyRequest);
     }
 
-    /**
-     * Updates the request with the specified ID with the specified status
-     */
     @Override
     public ProxyRequest updateRequest(final String id, final RequestStatus status) throws ProxyException {
         if (id == null || status == null) {

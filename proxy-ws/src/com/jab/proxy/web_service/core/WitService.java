@@ -17,7 +17,7 @@ import org.glassfish.grizzly.http.util.HttpStatus;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.jab.proxy.web_service.beans.Intent;
-import com.jab.proxy.web_service.beans.RestaurantReservationRequest;
+import com.jab.proxy.web_service.beans.RestaurantResRequest;
 import com.jab.proxy.web_service.beans.TranslateResult;
 import com.jab.proxy.web_service.beans.wit.WitResponse;
 import com.jab.proxy.web_service.exceptions.ProxyException;
@@ -68,7 +68,7 @@ public class WitService {
 
     private TranslateResult mapToRestaurantReservation(final WitResponse witResponse) {
         final TranslateResult translateResult = new TranslateResult();
-        final RestaurantReservationRequest restaurantReservationRequest = new RestaurantReservationRequest();
+        final RestaurantResRequest restaurantReservationRequest = new RestaurantResRequest();
         final List<String> missingFields = new ArrayList<String>();
         final HashMap<String, JsonElement> entitiesMap = witResponse.getOutcomes().get(0).get_entities();
 

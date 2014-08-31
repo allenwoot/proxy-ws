@@ -11,9 +11,18 @@ import com.jab.proxy.web_service.exceptions.ProxyException;
  */
 public interface DataProvider {
 
+    /**
+     * Gets all requests with a given status
+     */
     public List<ProxyRequest> getRequestsByStatus(RequestStatus status);
 
-    public boolean submitToQueue(ProxyRequest proxyRequest);
+    /**
+     * Submits the specified request to the queue
+     */
+    public boolean submitToQueue(ProxyRequest proxyRequest) throws ProxyException;
 
+    /**
+     * Updates the request with the specified ID with the specified status
+     */
     ProxyRequest updateRequest(String id, RequestStatus status) throws ProxyException;
 }

@@ -8,7 +8,7 @@ import com.jab.proxy.web_service.beans.GetQueueResult;
 import com.jab.proxy.web_service.beans.PostQueueResult;
 import com.jab.proxy.web_service.beans.ProxyRequest;
 import com.jab.proxy.web_service.beans.RequestStatus;
-import com.jab.proxy.web_service.beans.RestaurantReservationRequest;
+import com.jab.proxy.web_service.beans.RestaurantResRequest;
 import com.jab.proxy.web_service.exceptions.ProxyException;
 
 /**
@@ -44,7 +44,7 @@ public class RequestService {
 
         switch (proxyRequest.getIntent()) {
         case RESTAURANT_RESERVATION:
-            final RestaurantReservationRequest restaurantReservationRequest = (RestaurantReservationRequest) proxyRequest;
+            final RestaurantResRequest restaurantReservationRequest = (RestaurantResRequest) proxyRequest;
             if (ProxyUtils.isNullOrWhiteSpace(restaurantReservationRequest.getDateTime())) {
                 throw new ProxyException("Date time must be specified", HttpStatus.BAD_REQUEST_400);
             } else if (restaurantReservationRequest.getPartySize() == null || restaurantReservationRequest.getPartySize() <= 0) {

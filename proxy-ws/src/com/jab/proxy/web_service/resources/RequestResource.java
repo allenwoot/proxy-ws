@@ -14,7 +14,7 @@ import javax.ws.rs.core.Request;
 
 import com.jab.proxy.web_service.beans.ProxyRequest;
 import com.jab.proxy.web_service.beans.RequestStatus;
-import com.jab.proxy.web_service.beans.RestaurantReservationRequest;
+import com.jab.proxy.web_service.beans.RestaurantResRequest;
 import com.jab.proxy.web_service.beans.ServerResponse;
 import com.jab.proxy.web_service.core.RequestService;
 import com.jab.proxy.web_service.exceptions.ProxyException;
@@ -44,7 +44,7 @@ public class RequestResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public ServerResponse submitRequestToQueue(final RestaurantReservationRequest proxyRequest) throws ProxyException {
+    public ServerResponse submitRequestToQueue(final RestaurantResRequest proxyRequest) throws ProxyException {
         // TODO: One endpoint for all types of requests
         // This can be done with message body readers
         final RequestService requestService = new RequestService(this.requestContext);

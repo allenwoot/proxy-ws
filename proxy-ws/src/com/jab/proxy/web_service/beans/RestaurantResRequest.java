@@ -3,13 +3,13 @@ package com.jab.proxy.web_service.beans;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
-public class RestaurantReservationRequest extends ProxyRequest {
+public class RestaurantResRequest extends ProxyRequest {
     private String created;
     private String dateTime;
     private Integer partySize;
     private String restaurant;
 
-    public RestaurantReservationRequest() {
+    public RestaurantResRequest() {
         super.setIntent(Intent.RESTAURANT_RESERVATION);
     }
 
@@ -21,7 +21,7 @@ public class RestaurantReservationRequest extends ProxyRequest {
             return true;
         }
 
-        final String objId = ((RestaurantReservationRequest) obj).getId();
+        final String objId = ((RestaurantResRequest) obj).getId();
         return objId != null && objId.equals(super.getId());
     }
 
