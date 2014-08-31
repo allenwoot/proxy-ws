@@ -4,15 +4,18 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 
+import org.glassfish.grizzly.http.util.HttpStatus;
+
 import com.jab.proxy.web_service.beans.ProxyRequest;
 import com.jab.proxy.web_service.beans.RequestStatus;
+import com.jab.proxy.web_service.exceptions.ProxyException;
 
-public enum SingletonDataProvider implements DataProvider {
+public enum InMemoryDataProvider implements DataProvider {
     INSTANCE();
 
     private LinkedHashSet<ProxyRequest> allRequests;
 
-    private SingletonDataProvider() {
+    private InMemoryDataProvider() {
         this.allRequests = new LinkedHashSet<ProxyRequest>();
     }
 
@@ -31,5 +34,24 @@ public enum SingletonDataProvider implements DataProvider {
     @Override
     public boolean submitToQueue(final ProxyRequest proxyRequest) {
         return this.allRequests.add(proxyRequest);
+    }
+
+    /**
+     * Updates the request with the specified ID with the specified status
+     */
+    @Override
+    public ProxyRequest updateRequest(final String id, final RequestStatus status) throws ProxyException {
+        if (id == null || status == null) {
+            throw new ProxyException("Request must contain an ID and an update status", HttpStatus.BAD_REQUEST_400);
+        }
+
+        for (final ProxyRequest proxyRequest : this.allRequests) {
+            if (proxyRequest.getId().equals(id)) {
+                proxyRequest.setStatus(status);
+                return proxyRequest;
+            }
+        }
+
+        return null;
     }
 }

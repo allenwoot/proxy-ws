@@ -27,6 +27,9 @@ import com.jab.proxy.web_service.exceptions.ProxyException;
  */
 public class WitService {
 
+    /**
+     * Classifies the specified request string using wit
+     */
     public TranslateResult translate(final String requestString) throws ProxyException {
         final WitResponse witResponse = issueWitCall(requestString);
         return mapWitResponseToTranslateResult(witResponse);
@@ -47,12 +50,12 @@ public class WitService {
             response = httpclient.execute(httpGet);
             final String entityString = EntityUtils.toString(response.getEntity(), Charset.forName("UTF-8"));
             if (response.getStatusLine().getStatusCode() != 200) {
-                throw new ProxyException(entityString, response.getStatusLine().getStatusCode());
+                throw new ProxyException(entityString, HttpStatus.getHttpStatus(response.getStatusLine().getStatusCode()));
             }
 
             return new Gson().fromJson(entityString, WitResponse.class);
         } catch (final IOException e) {
-            throw new ProxyException("Failed to read wit response", response.getStatusLine().getStatusCode());
+            throw new ProxyException("Failed to read wit response", HttpStatus.getHttpStatus(response.getStatusLine().getStatusCode()));
         } finally {
             try {
                 response.close();
@@ -103,11 +106,11 @@ public class WitService {
     private TranslateResult mapWitResponseToTranslateResult(final WitResponse witResponse) throws ProxyException {
         final Intent intent = Intent.fromSchemaName(witResponse.getOutcomes().get(0).get_intent());
         if (intent == null) {
-            throw new ProxyException("Could not map request \"" + witResponse.get_text() + "\" to an intent", HttpStatus.BAD_REQUEST_400.getStatusCode());
+            throw new ProxyException("Could not map request \"" + witResponse.get_text() + "\" to an intent", HttpStatus.BAD_REQUEST_400);
         }
 
         if (intent != Intent.RESTAURANT_RESERVATION) {
-            throw new ProxyException("Only restaurant reservations currently supported", HttpStatus.BAD_REQUEST_400.getStatusCode());
+            throw new ProxyException("Only restaurant reservations currently supported", HttpStatus.BAD_REQUEST_400);
         }
 
         switch (intent) {

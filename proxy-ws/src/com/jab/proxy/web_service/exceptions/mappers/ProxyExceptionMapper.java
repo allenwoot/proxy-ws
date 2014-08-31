@@ -13,7 +13,7 @@ public class ProxyExceptionMapper implements ExceptionMapper<ProxyException> {
 
     @Override
     public Response toResponse(final ProxyException e) {
-        final ServerError serverError = new ServerError(e.getStatus(), e.getMessage());
-        return Response.status(e.getStatus()).entity(serverError).type(MediaType.APPLICATION_JSON).build();
+        final ServerError serverError = new ServerError(e.getHttpStatus().getStatusCode(), e.getMessage());
+        return Response.status(e.getHttpStatus().getStatusCode()).entity(serverError).type(MediaType.APPLICATION_JSON).build();
     }
 }

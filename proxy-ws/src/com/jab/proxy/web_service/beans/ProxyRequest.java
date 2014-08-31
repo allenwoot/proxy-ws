@@ -10,8 +10,25 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProxyRequest {
+    private String id;
     private Intent intent;
     private RequestStatus status;
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null) {
+            return false;
+        } else if (this == obj) {
+            return true;
+        }
+
+        final String objId = ((ProxyRequest) obj).getId();
+        return objId != null && objId.equals(this.id);
+    }
+
+    public String getId() {
+        return this.id;
+    }
 
     public Intent getIntent() {
         return this.intent;
@@ -19,6 +36,15 @@ public class ProxyRequest {
 
     public RequestStatus getStatus() {
         return this.status;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id.hashCode();
+    }
+
+    public void setId(final String id) {
+        this.id = id;
     }
 
     public void setIntent(final Intent intent) {

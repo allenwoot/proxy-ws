@@ -6,12 +6,23 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 public class RestaurantReservationRequest extends ProxyRequest {
     private String created;
     private String dateTime;
-    private String id;
     private Integer partySize;
     private String restaurant;
 
     public RestaurantReservationRequest() {
         super.setIntent(Intent.RESTAURANT_RESERVATION);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (obj == null) {
+            return false;
+        } else if (this == obj) {
+            return true;
+        }
+
+        final String objId = ((RestaurantReservationRequest) obj).getId();
+        return objId != null && objId.equals(super.getId());
     }
 
     public String getCreated() {
@@ -22,10 +33,6 @@ public class RestaurantReservationRequest extends ProxyRequest {
         return this.dateTime;
     }
 
-    public String getId() {
-        return this.id;
-    }
-
     public Integer getPartySize() {
         return this.partySize;
     }
@@ -34,16 +41,17 @@ public class RestaurantReservationRequest extends ProxyRequest {
         return this.restaurant;
     }
 
+    @Override
+    public int hashCode() {
+        return super.getId().hashCode();
+    }
+
     public void setCreated(final String created) {
         this.created = created;
     }
 
     public void setDateTime(final String dateTime) {
         this.dateTime = dateTime;
-    }
-
-    public void setId(final String id) {
-        this.id = id;
     }
 
     public void setPartySize(final Integer partySize) {
