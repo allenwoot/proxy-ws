@@ -81,7 +81,7 @@ public class WitService {
 
         // Set restaurant name
         if (entitiesMap.containsKey("restaurant")) {
-            restaurantReservationRequest.setRestaurant(entitiesMap.get("party").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsString());
+            restaurantReservationRequest.setRestaurant(entitiesMap.get("restaurant").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsString());
         } else {
             missingFields.add("restaurant");
         }
