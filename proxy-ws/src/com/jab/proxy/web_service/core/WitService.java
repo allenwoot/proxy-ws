@@ -89,7 +89,8 @@ public class WitService {
         // Set date time
         if (entitiesMap.containsKey("datetime")) {
             final String dateTime = entitiesMap.get("datetime").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsJsonObject().get("from").getAsString();
-            restaurantReservationRequest.setDateTime(dateTime);
+            final String iso86901Time = ProxyUtils.toIso8601Time(dateTime);
+            restaurantReservationRequest.setDateTime(iso86901Time);
         } else {
             missingFields.add("dateTime");
         }
