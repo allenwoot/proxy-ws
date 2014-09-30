@@ -13,6 +13,11 @@ import com.jab.proxy.web_service.exceptions.ProxyException;
 public interface DataProvider {
 
     /**
+     * Authenticates a user given the email and password fields
+     */
+    public User authenticateUser(User user) throws ProxyException;
+
+    /**
      * Gets all requests with a given status
      */
     public List<ProxyRequest> getRequestsByStatus(RequestStatus status);

@@ -26,6 +26,29 @@ public enum RedisDataProvider implements DataProvider {
     }
 
     @Override
+    public User authenticateUser(final User user) throws ProxyException {
+        // Verify email and password are non empty
+        if (ProxyUtils.isNullOrWhiteSpace(user.getEmail())) {
+            throw new ProxyException("Email must be provided", HttpStatus.BAD_REQUEST_400);
+        } else if (ProxyUtils.isNullOrWhiteSpace(user.getPassword())) {
+            throw new ProxyException("Password must be provied", HttpStatus.BAD_REQUEST_400);
+        }
+
+        // Verify user exists
+        if (!this.jedis.exists(user.getEmail())) {
+            throw new ProxyException(String.format("User with email %s not found", user.getEmail()), HttpStatus.NOT_FOUND_404);
+        }
+
+        // Verify password
+        final User fetchedUser = ProxyUtils.fromJsonString(this.jedis.get(user.getEmail()), User.class);
+        if (!fetchedUser.getPassword().equals(user.getPassword())) {
+            throw new ProxyException("Authentication failed", HttpStatus.FORBIDDEN_403);
+        }
+
+        return fetchedUser;
+    }
+
+    @Override
     public List<ProxyRequest> getRequestsByStatus(final RequestStatus status) {
         // Get the ID list from the status
         final List<String> ids = this.jedis.lrange(status.name(), 0, 100);

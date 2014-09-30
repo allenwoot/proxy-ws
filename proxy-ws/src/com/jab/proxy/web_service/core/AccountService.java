@@ -11,6 +11,14 @@ import com.jab.proxy.web_service.exceptions.ProxyException;
  */
 public class AccountService {
 
+    public UserAuthResult authenticateUser(final User user) throws ProxyException {
+        final User fetchedUser = StorageClient.INSTANCE.getDataProvider().authenticateUser(user);
+        final UserAuthResult userAuthResult = new UserAuthResult();
+        userAuthResult.setUser(fetchedUser);
+
+        return userAuthResult;
+    }
+
     public UserAuthResult registerAccount(final User user) throws ProxyException {
         if (!StorageClient.INSTANCE.getDataProvider().registerAccount(user)) {
             throw new ProxyException("Failed to register user", HttpStatus.INTERNAL_SERVER_ERROR_500);

@@ -18,7 +18,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     @Override
     public ContainerRequest filter(final ContainerRequest request) {
         // Auth token header is not required for the account setup endpoint
-        if (request.getPath().endsWith("account") && request.getMethod().equalsIgnoreCase("POST")) {
+        if ((request.getPath().endsWith("account") && request.getMethod().equalsIgnoreCase("POST")) ||
+                request.getPath().endsWith("authenticate") && request.getMethod().equalsIgnoreCase("POST")) {
             return request;
         }
 
