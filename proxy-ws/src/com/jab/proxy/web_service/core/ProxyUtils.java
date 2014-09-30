@@ -13,15 +13,21 @@ import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.glassfish.grizzly.http.util.HttpStatus;
 
 import com.google.gson.Gson;
+import com.jab.proxy.web_service.beans.User;
 import com.jab.proxy.web_service.exceptions.ProxyException;
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 public class ProxyUtils {
 
     public static <T> T fromJsonString(final String jsonString, final Class<T> clazz) {
         final Gson gson = new Gson();
         final T t = gson.fromJson(jsonString, clazz);
-
         return t;
+    }
+
+    public static String generateAuthToken(final User user) {
+        final String preEncoded = user.getEmail() + System.currentTimeMillis();
+        return Base64.encode(preEncoded.getBytes());
     }
 
     public static boolean isNullOrWhiteSpace(final String s) {

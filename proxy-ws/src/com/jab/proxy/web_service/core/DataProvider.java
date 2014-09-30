@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.jab.proxy.web_service.beans.ProxyRequest;
 import com.jab.proxy.web_service.beans.RequestStatus;
+import com.jab.proxy.web_service.beans.User;
 import com.jab.proxy.web_service.exceptions.ProxyException;
 
 /**
@@ -17,6 +18,11 @@ public interface DataProvider {
     public List<ProxyRequest> getRequestsByStatus(RequestStatus status);
 
     /**
+     * Registers a user
+     */
+    public boolean registerAccount(User user) throws ProxyException;
+
+    /**
      * Submits the specified request to the queue
      */
     public boolean submitToQueue(ProxyRequest proxyRequest) throws ProxyException;
@@ -24,5 +30,15 @@ public interface DataProvider {
     /**
      * Updates the request with the specified ID with the specified status
      */
-    ProxyRequest updateRequest(String id, RequestStatus status) throws ProxyException;
+    public ProxyRequest updateRequest(String id, RequestStatus status) throws ProxyException;
+
+    /**
+     * Updates a user
+     */
+    boolean updateAccount(String authToken, User user) throws ProxyException;
+
+    /**
+     * Returns a user object given an auth token, or null if invalid
+     */
+    User validateAuthToken(String authToken);
 }

@@ -10,6 +10,7 @@ import redis.clients.jedis.Jedis;
 import com.jab.proxy.web_service.beans.ProxyRequest;
 import com.jab.proxy.web_service.beans.RequestStatus;
 import com.jab.proxy.web_service.beans.RestaurantResRequest;
+import com.jab.proxy.web_service.beans.User;
 import com.jab.proxy.web_service.exceptions.ProxyException;
 
 /**
@@ -41,6 +42,37 @@ public enum RedisDataProvider implements DataProvider {
     }
 
     @Override
+    public boolean registerAccount(final User user) throws ProxyException {
+        // Check inputs
+        if (ProxyUtils.isNullOrWhiteSpace(user.getEmail())) {
+            throw new ProxyException(String.format("Missing field {%s}", "email"), HttpStatus.BAD_REQUEST_400);
+        } else if (ProxyUtils.isNullOrWhiteSpace(user.getFirstName())) {
+            throw new ProxyException(String.format("Missing field {%s}", "firstName"), HttpStatus.BAD_REQUEST_400);
+        } else if (ProxyUtils.isNullOrWhiteSpace(user.getLastName())) {
+            throw new ProxyException(String.format("Missing field {%s}", "lastName"), HttpStatus.BAD_REQUEST_400);
+        } else if (ProxyUtils.isNullOrWhiteSpace(user.getNumber())) {
+            throw new ProxyException(String.format("Missing field {%s}", "number"), HttpStatus.BAD_REQUEST_400);
+        } else if (ProxyUtils.isNullOrWhiteSpace(user.getPassword())) {
+            throw new ProxyException(String.format("Missing field {%s}", "password"), HttpStatus.BAD_REQUEST_400);
+        } else if (user.getUserType() == null) {
+            throw new ProxyException(String.format("Missing field {%s}", "userType"), HttpStatus.BAD_REQUEST_400);
+        }
+
+        if (this.jedis.exists(user.getEmail())) {
+            throw new ProxyException(String.format("User %s already registered", user.getEmail()), HttpStatus.FORBIDDEN_403);
+        }
+
+        // Create auth for user
+        user.setAuthToken(ProxyUtils.generateAuthToken(user));
+        this.jedis.set(user.getAuthToken(), user.getEmail());
+
+        // Save user to storage
+        final String jsonString = ProxyUtils.toJsonString(user);
+        this.jedis.set(user.getEmail(), jsonString);
+        return "OK".equals(this.jedis.save());
+    }
+
+    @Override
     public boolean submitToQueue(final ProxyRequest proxyRequest) throws ProxyException {
         if (!(proxyRequest instanceof RestaurantResRequest)) {
             throw new ProxyException("Request is not restaurant request", HttpStatus.INTERNAL_SERVER_ERROR_500);
@@ -53,8 +85,47 @@ public enum RedisDataProvider implements DataProvider {
         // Add request to the list of queued IDs
         this.jedis.rpush(RequestStatus.QUEUED.name(), proxyRequest.getId());
 
-        // Background save
-        return "OK".equals(this.jedis.bgsave());
+        // Save
+        return "OK".equals(this.jedis.save());
+    }
+
+    @Override
+    public boolean updateAccount(final String authToken, final User user) throws ProxyException {
+        if (ProxyUtils.isNullOrWhiteSpace(authToken)) {
+            throw new ProxyException("Auth token not provided", HttpStatus.BAD_REQUEST_400);
+        } else if (!this.jedis.exists(authToken)) {
+            throw new ProxyException("Auth token not recognized", HttpStatus.BAD_REQUEST_400);
+        }
+
+        final User storedUser = ProxyUtils.fromJsonString(this.jedis.get(this.jedis.get(authToken)), User.class);
+        if (user.getFirstName() != null && user.getFirstName() != storedUser.getFirstName()) {
+            storedUser.setFirstName(user.getFirstName());
+        }
+        if (user.getLastName() != null && user.getLastName() != storedUser.getLastName()) {
+            storedUser.setLastName(user.getLastName());
+        }
+        if (user.getNumber() != null && user.getNumber() != storedUser.getNumber()) {
+            storedUser.setNumber(user.getNumber());
+        }
+        if (user.getPassword() != null && user.getPassword() != storedUser.getPassword()) {
+            storedUser.setPassword(user.getPassword());
+        }
+        // If the email is being updated, refresh the auth key reverse map
+        if (user.getEmail() != null && user.getEmail() != storedUser.getEmail()) {
+            if (this.jedis.exists(user.getEmail())) {
+                throw new ProxyException(String.format("Email %s already exists", user.getEmail()), HttpStatus.FORBIDDEN_403);
+            }
+
+            this.jedis.del(storedUser.getEmail());
+            storedUser.setEmail(user.getEmail());
+            this.jedis.set(user.getEmail(), ProxyUtils.toJsonString(storedUser));
+            this.jedis.set(authToken, user.getEmail());
+        } else {
+            this.jedis.set(storedUser.getEmail(), ProxyUtils.toJsonString(storedUser));
+        }
+
+        // Save
+        return "OK".equals(this.jedis.save());
     }
 
     @Override
@@ -77,8 +148,17 @@ public enum RedisDataProvider implements DataProvider {
         this.jedis.lrem(oldStatus.name(), 1, id);
         this.jedis.rpush(status.name(), id);
 
-        // Background save
-        this.jedis.bgsave();
+        // Save
+        this.jedis.save();
         return restaurantReservationRequest;
+    }
+
+    @Override
+    public User validateAuthToken(final String authToken) {
+        if (!this.jedis.exists(authToken)) {
+            return null;
+        }
+
+        return ProxyUtils.fromJsonString(this.jedis.get(this.jedis.get(authToken)), User.class);
     }
 }
