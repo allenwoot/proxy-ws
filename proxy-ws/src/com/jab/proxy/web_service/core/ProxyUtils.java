@@ -27,7 +27,12 @@ public class ProxyUtils {
 
     public static String generateAuthToken(final User user) {
         final String preEncoded = user.getEmail() + System.currentTimeMillis();
-        return Base64.encode(preEncoded.getBytes());
+        return "AUTH" + Base64.encode(preEncoded.getBytes());
+    }
+
+    public static String generateUserId(final User user) {
+        final int base = Math.abs(new Integer(new String(user.getEmail() + System.currentTimeMillis()).hashCode()));
+        return "USER" + base;
     }
 
     public static boolean isNullOrWhiteSpace(final String s) {

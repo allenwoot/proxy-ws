@@ -7,6 +7,7 @@ public class User {
     private String authToken;
     private String email;
     private String firstName;
+    private String id;
     private String lastName;
     private String number;
     private String password;
@@ -22,6 +23,10 @@ public class User {
 
     public String getFirstName() {
         return this.firstName;
+    }
+
+    public String getId() {
+        return this.id;
     }
 
     public String getLastName() {
@@ -50,6 +55,10 @@ public class User {
 
     public void setFirstName(final String firstName) {
         this.firstName = firstName;
+    }
+
+    public void setId(final String id) {
+        this.id = id;
     }
 
     public void setLastName(final String lastName) {

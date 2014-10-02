@@ -40,7 +40,8 @@ public enum RedisDataProvider implements DataProvider {
         }
 
         // Verify password
-        final User fetchedUser = ProxyUtils.fromJsonString(this.jedis.get(user.getEmail()), User.class);
+        final String userId = this.jedis.get(user.getEmail());
+        final User fetchedUser = ProxyUtils.fromJsonString(this.jedis.get(userId), User.class);
         if (!fetchedUser.getPassword().equals(user.getPassword())) {
             throw new ProxyException("Authentication failed", HttpStatus.FORBIDDEN_403);
         }
@@ -85,13 +86,16 @@ public enum RedisDataProvider implements DataProvider {
             throw new ProxyException(String.format("User %s already registered", user.getEmail()), HttpStatus.FORBIDDEN_403);
         }
 
-        // Create auth for user
+        // Create ID and auth token for user
+        user.setId(ProxyUtils.generateUserId(user));
         user.setAuthToken(ProxyUtils.generateAuthToken(user));
-        this.jedis.set(user.getAuthToken(), user.getEmail());
 
-        // Save user to storage
+
+        // Save to storage
         final String jsonString = ProxyUtils.toJsonString(user);
-        this.jedis.set(user.getEmail(), jsonString);
+        this.jedis.set(user.getId(), jsonString);
+        this.jedis.set(user.getEmail(), user.getId());
+        this.jedis.set(user.getAuthToken(), user.getId());
         return "OK".equals(this.jedis.save());
     }
 
@@ -113,7 +117,7 @@ public enum RedisDataProvider implements DataProvider {
     }
 
     @Override
-    public boolean updateAccount(final String authToken, final User user) throws ProxyException {
+    public boolean updateAccount(final String authToken, final User updatedUser) throws ProxyException {
         if (ProxyUtils.isNullOrWhiteSpace(authToken)) {
             throw new ProxyException("Auth token not provided", HttpStatus.BAD_REQUEST_400);
         } else if (!this.jedis.exists(authToken)) {
@@ -121,30 +125,31 @@ public enum RedisDataProvider implements DataProvider {
         }
 
         final User storedUser = ProxyUtils.fromJsonString(this.jedis.get(this.jedis.get(authToken)), User.class);
-        if (user.getFirstName() != null && user.getFirstName() != storedUser.getFirstName()) {
-            storedUser.setFirstName(user.getFirstName());
+        if (updatedUser.getFirstName() != null && updatedUser.getFirstName() != storedUser.getFirstName()) {
+            storedUser.setFirstName(updatedUser.getFirstName());
         }
-        if (user.getLastName() != null && user.getLastName() != storedUser.getLastName()) {
-            storedUser.setLastName(user.getLastName());
+        if (updatedUser.getLastName() != null && updatedUser.getLastName() != storedUser.getLastName()) {
+            storedUser.setLastName(updatedUser.getLastName());
         }
-        if (user.getNumber() != null && user.getNumber() != storedUser.getNumber()) {
-            storedUser.setNumber(user.getNumber());
+        if (updatedUser.getNumber() != null && updatedUser.getNumber() != storedUser.getNumber()) {
+            storedUser.setNumber(updatedUser.getNumber());
         }
-        if (user.getPassword() != null && user.getPassword() != storedUser.getPassword()) {
-            storedUser.setPassword(user.getPassword());
+        if (updatedUser.getPassword() != null && updatedUser.getPassword() != storedUser.getPassword()) {
+            storedUser.setPassword(updatedUser.getPassword());
         }
-        // If the email is being updated, refresh the auth key reverse map
-        if (user.getEmail() != null && user.getEmail() != storedUser.getEmail()) {
-            if (this.jedis.exists(user.getEmail())) {
-                throw new ProxyException(String.format("Email %s already exists", user.getEmail()), HttpStatus.FORBIDDEN_403);
+        // If the email is being updated
+        if (updatedUser.getEmail() != null && updatedUser.getEmail() != storedUser.getEmail()) {
+            if (this.jedis.exists(updatedUser.getEmail())) {
+                throw new ProxyException(String.format("Email %s already exists", updatedUser.getEmail()), HttpStatus.FORBIDDEN_403);
             }
 
+            // Delete the reverse key for the old email
             this.jedis.del(storedUser.getEmail());
-            storedUser.setEmail(user.getEmail());
-            this.jedis.set(user.getEmail(), ProxyUtils.toJsonString(storedUser));
-            this.jedis.set(authToken, user.getEmail());
+            storedUser.setEmail(updatedUser.getEmail());
+            this.jedis.set(updatedUser.getEmail(), storedUser.getId());
+            this.jedis.set(storedUser.getId(), ProxyUtils.toJsonString(storedUser));
         } else {
-            this.jedis.set(storedUser.getEmail(), ProxyUtils.toJsonString(storedUser));
+            this.jedis.set(storedUser.getId(), ProxyUtils.toJsonString(storedUser));
         }
 
         // Save
