@@ -30,7 +30,7 @@ public interface DataProvider {
     /**
      * Submits the specified request to the queue
      */
-    public boolean submitToQueue(ProxyRequest proxyRequest) throws ProxyException;
+    public boolean submitToQueue(User user, ProxyRequest proxyRequest) throws ProxyException;
 
     /**
      * Updates the request with the specified ID with the specified status
@@ -38,12 +38,12 @@ public interface DataProvider {
     public ProxyRequest updateRequest(String id, RequestStatus status) throws ProxyException;
 
     /**
-     * Updates a user
+     * Returns a user object given that user's ID
      */
-    boolean updateAccount(String authToken, User user) throws ProxyException;
+    User getUserById(String userId);
 
     /**
-     * Returns a user object given an auth token, or null if invalid
+     * Updates a user
      */
-    User validateAuthToken(String authToken);
+    boolean updateAccount(User storedUser, User updatedUser) throws ProxyException;
 }

@@ -30,7 +30,8 @@ public class AuthenticationFilter implements ContainerRequestFilter {
         }
 
         // Validate the auth token
-        if (StorageClient.INSTANCE.getDataProvider().validateAuthToken(authToken) == null) {
+        final String userId = ProxyUtils.extractIdFromAuthToken(authToken);
+        if (userId == null || StorageClient.INSTANCE.getDataProvider().getUserById(userId) == null) {
             throw failRequest(HttpStatus.UNAUTHORIZED_401, "Invalid Auth-Token header");
         }
 

@@ -13,6 +13,8 @@ import javax.ws.rs.core.Request;
 import com.jab.proxy.web_service.beans.ServerResponse;
 import com.jab.proxy.web_service.beans.User;
 import com.jab.proxy.web_service.core.AccountService;
+import com.jab.proxy.web_service.core.ProxyUtils;
+import com.jab.proxy.web_service.core.StorageClient;
 import com.jab.proxy.web_service.exceptions.ProxyException;
 
 /**
@@ -44,9 +46,11 @@ public class AccountResource {
     @PUT
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public ServerResponse updateAccount(final User user) throws ProxyException {
+    public ServerResponse updateAccount(final User updatedUser) throws ProxyException {
         final AccountService accountService = new AccountService();
-        return new ServerResponse(accountService.updateAccount(this.servletRequest.getHeader("Auth-Token"), user));
+        final String authToken = this.servletRequest.getHeader("Auth-Token");
+        final User storedUser = StorageClient.INSTANCE.getDataProvider().getUserById(ProxyUtils.extractIdFromAuthToken(authToken));
+        return new ServerResponse(accountService.updateAccount(storedUser, updatedUser));
     }
 
 }

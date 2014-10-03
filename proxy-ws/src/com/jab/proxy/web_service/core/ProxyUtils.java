@@ -15,9 +15,21 @@ import org.glassfish.grizzly.http.util.HttpStatus;
 import com.google.gson.Gson;
 import com.jab.proxy.web_service.beans.User;
 import com.jab.proxy.web_service.exceptions.ProxyException;
+import com.sun.org.apache.xml.internal.security.exceptions.Base64DecodingException;
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 
 public class ProxyUtils {
+
+    public static String extractIdFromAuthToken(final String authToken) {
+        final String encoded = authToken.substring("AUTH".length());
+        String decoded;
+        try {
+            decoded = new String(Base64.decode(encoded.getBytes()));
+        } catch (final Base64DecodingException e) {
+            return null;
+        }
+        return decoded.split("@")[0];
+    }
 
     public static <T> T fromJsonString(final String jsonString, final Class<T> clazz) {
         final Gson gson = new Gson();
@@ -26,8 +38,12 @@ public class ProxyUtils {
     }
 
     public static String generateAuthToken(final User user) {
-        final String preEncoded = user.getEmail() + System.currentTimeMillis();
+        final String preEncoded = user.getId() + "@" + System.currentTimeMillis();
         return "AUTH" + Base64.encode(preEncoded.getBytes());
+    }
+
+    public static String generateRequestId() {
+        return "REQUEST" + Integer.toString(Math.abs(new Long(System.currentTimeMillis()).hashCode()));
     }
 
     public static String generateUserId(final User user) {

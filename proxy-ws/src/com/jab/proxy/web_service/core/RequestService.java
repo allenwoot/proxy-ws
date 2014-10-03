@@ -9,6 +9,7 @@ import com.jab.proxy.web_service.beans.PostQueueResult;
 import com.jab.proxy.web_service.beans.ProxyRequest;
 import com.jab.proxy.web_service.beans.RequestStatus;
 import com.jab.proxy.web_service.beans.RestaurantResRequest;
+import com.jab.proxy.web_service.beans.User;
 import com.jab.proxy.web_service.exceptions.ProxyException;
 
 /**
@@ -35,7 +36,7 @@ public class RequestService {
     /**
      * Queues the specified request
      */
-    public PostQueueResult submitToRequestQueue(final ProxyRequest proxyRequest) throws ProxyException {
+    public PostQueueResult submitToRequestQueue(final User user, final ProxyRequest proxyRequest) throws ProxyException {
         if (proxyRequest == null) {
             throw new ProxyException("No proxy request specified", HttpStatus.BAD_REQUEST_400);
         } else if (proxyRequest.getIntent() == null) {
@@ -54,10 +55,10 @@ public class RequestService {
             final String currentTime = ProxyUtils.toIso8601Time(System.currentTimeMillis());
             restaurantReservationRequest.setCreated(currentTime);
             restaurantReservationRequest.setStatus(RequestStatus.QUEUED);
-            restaurantReservationRequest.setId(Integer.toString(Math.abs(currentTime.hashCode())));
+            restaurantReservationRequest.setId(ProxyUtils.generateRequestId());
 
             // Put in data provider
-            StorageClient.INSTANCE.getDataProvider().submitToQueue(proxyRequest);
+            StorageClient.INSTANCE.getDataProvider().submitToQueue(user, proxyRequest);
         }
 
         return new PostQueueResult(proxyRequest);

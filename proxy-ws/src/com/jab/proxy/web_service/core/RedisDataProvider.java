@@ -66,6 +66,11 @@ public enum RedisDataProvider implements DataProvider {
     }
 
     @Override
+    public User getUserById(final String userId) {
+        return ProxyUtils.fromJsonString(this.jedis.get(userId), User.class);
+    }
+
+    @Override
     public boolean registerAccount(final User user) throws ProxyException {
         // Check inputs
         if (ProxyUtils.isNullOrWhiteSpace(user.getEmail())) {
@@ -86,21 +91,15 @@ public enum RedisDataProvider implements DataProvider {
             throw new ProxyException(String.format("User %s already registered", user.getEmail()), HttpStatus.FORBIDDEN_403);
         }
 
-        // Create ID and auth token for user
-        user.setId(ProxyUtils.generateUserId(user));
-        user.setAuthToken(ProxyUtils.generateAuthToken(user));
-
-
         // Save to storage
         final String jsonString = ProxyUtils.toJsonString(user);
         this.jedis.set(user.getId(), jsonString);
         this.jedis.set(user.getEmail(), user.getId());
-        this.jedis.set(user.getAuthToken(), user.getId());
         return "OK".equals(this.jedis.save());
     }
 
     @Override
-    public boolean submitToQueue(final ProxyRequest proxyRequest) throws ProxyException {
+    public boolean submitToQueue(final User user, final ProxyRequest proxyRequest) throws ProxyException {
         if (!(proxyRequest instanceof RestaurantResRequest)) {
             throw new ProxyException("Request is not restaurant request", HttpStatus.INTERNAL_SERVER_ERROR_500);
         }
@@ -117,14 +116,7 @@ public enum RedisDataProvider implements DataProvider {
     }
 
     @Override
-    public boolean updateAccount(final String authToken, final User updatedUser) throws ProxyException {
-        if (ProxyUtils.isNullOrWhiteSpace(authToken)) {
-            throw new ProxyException("Auth token not provided", HttpStatus.BAD_REQUEST_400);
-        } else if (!this.jedis.exists(authToken)) {
-            throw new ProxyException("Auth token not recognized", HttpStatus.BAD_REQUEST_400);
-        }
-
-        final User storedUser = ProxyUtils.fromJsonString(this.jedis.get(this.jedis.get(authToken)), User.class);
+    public boolean updateAccount(final User storedUser, final User updatedUser) throws ProxyException {
         if (updatedUser.getFirstName() != null && updatedUser.getFirstName() != storedUser.getFirstName()) {
             storedUser.setFirstName(updatedUser.getFirstName());
         }
@@ -179,14 +171,5 @@ public enum RedisDataProvider implements DataProvider {
         // Save
         this.jedis.save();
         return restaurantReservationRequest;
-    }
-
-    @Override
-    public User validateAuthToken(final String authToken) {
-        if (!this.jedis.exists(authToken)) {
-            return null;
-        }
-
-        return ProxyUtils.fromJsonString(this.jedis.get(this.jedis.get(authToken)), User.class);
     }
 }

@@ -1,5 +1,6 @@
 package com.jab.proxy.web_service.resources;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -16,7 +17,10 @@ import com.jab.proxy.web_service.beans.ProxyRequest;
 import com.jab.proxy.web_service.beans.RequestStatus;
 import com.jab.proxy.web_service.beans.RestaurantResRequest;
 import com.jab.proxy.web_service.beans.ServerResponse;
+import com.jab.proxy.web_service.beans.User;
+import com.jab.proxy.web_service.core.ProxyUtils;
 import com.jab.proxy.web_service.core.RequestService;
+import com.jab.proxy.web_service.core.StorageClient;
 import com.jab.proxy.web_service.exceptions.ProxyException;
 
 /**
@@ -27,6 +31,9 @@ public class RequestResource {
 
     @Context
     private Request requestContext;
+
+    @Context
+    private HttpServletRequest servletRequest;
 
     /**
      * Gets proxy requests that have the specified status
@@ -48,7 +55,9 @@ public class RequestResource {
         // TODO: One endpoint for all types of requests
         // This can be done with message body readers
         final RequestService requestService = new RequestService(this.requestContext);
-        return new ServerResponse(requestService.submitToRequestQueue(proxyRequest));
+        final String userId = ProxyUtils.extractIdFromAuthToken(this.servletRequest.getHeader("Auth-Token"));
+        final User user = StorageClient.INSTANCE.getDataProvider().getUserById(userId);
+        return new ServerResponse(requestService.submitToRequestQueue(user, proxyRequest));
     }
 
     /**
