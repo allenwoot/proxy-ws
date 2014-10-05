@@ -1,15 +1,15 @@
 #API Endpoints
  
 ##### Request
-* [POST /translate](post-translate): translates a user request into a an intent with fields
-* [POST /request](post-request): submits a request for processing 
-* [GET /request?status=<status>](get-requeststatusstatus): gets requests from storage
-* [PUT /request/id/<id>](put-requestidid): modifies a request (e.g. change its state)
+* [POST /translate](README.md#post-translate): translates a user request into a an intent with fields
+* [POST /request](README.md#post-request): submits a request for processing 
+* [GET /request?status=<status>](README.md#get-requeststatusstatus): gets requests from storage
+* [PUT /request/id/<id>](README.md#put-requestidid): modifies a request (e.g. change its state)
 
 ##### Account
-* [POST /account](post-account): registers a user
-* [PUT /account](put-account): updates a user
-* [POST /authenticate](post-authenticate): authenticates a user
+* [POST /account](README.md#post-account): registers a user
+* [PUT /account](README.md#put-account): updates a user
+* [POST /authenticate](README.md#post-authenticate): authenticates a user
  
 * * * 
 
