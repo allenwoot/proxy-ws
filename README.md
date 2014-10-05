@@ -1,15 +1,15 @@
 #API Endpoints
  
 ##### Request
-* [POST /translate](post-/translate): translates a user request into a an intent with fields
-* [POST /request](): submits a request for processing 
-* [GET /request?status=<status>](): gets requests from storage
-* [PUT /request/id/<id>](): modifies a request (e.g. change its state)
+* [POST /translate](post-translate): translates a user request into a an intent with fields
+* [POST /request](post-request): submits a request for processing 
+* [GET /request?status=<status>](get-requeststatusstatus): gets requests from storage
+* [PUT /request/id/<id>](put-requestidid): modifies a request (e.g. change its state)
 
 ##### Account
-* [POST /account](): registers a user
-* [PUT /account](): updates a user
-* [POST /authenticate](): authenticates a user
+* [POST /account](post-account): registers a user
+* [PUT /account](put-account): updates a user
+* [POST /authenticate](post-authenticate): authenticates a user
  
 * * * 
 
@@ -84,7 +84,9 @@ __400 bad request__
 	}
 }
 ```
-## GET `/request?status=QUEUED||PROCESSING||DONE`
+## GET `/request?status=<status>`
+
+Gets all requests where the status is one of the enum `QUEUED`, `PROCESSING`, or `DONE`
 ```
 { 
   "result": { 
