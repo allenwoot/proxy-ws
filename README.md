@@ -16,32 +16,41 @@
 ## POST `/translate `
 
 ```
-{ "request":"make a reservation tmrw at 8pm for 3 at x" } 
+{ "request":"Make a reservation tomorrow at 8pm for 4 at House of Prime Rib" } 
 ```
 
 
 __200 OK__
 ```
-{ "result": {
-	  “request”: {
-	  "intent":"RESTAURANT_RESERVATION", 
-    "restaurant":"Roscoes", 
-    “dateTime”:”Thu, 28 Aug 2014 09:30:00 GMT”
-	  },
-    “missingFields”: [{
-		  “field”: “partySize”,
-		  “type”: “integer”,
-		  “friendlyString”: “For how many people?”
-    }],
-    “validatedFields”: [{
-		  “field”: “restaurant”,
-		  “type”: “string”,
-		  “friendlyString”: “Where?”
-	  }]
-    “Confirmation”:”We’ll make a reservation at $restaurant for $partySize people at $dateTime.”
-  }, 
-  "error": null
-} 
+{
+    "result": {
+        "confirmation": "We'll make a reservation at $restaurant for $partySize people at $dateTime.",
+        "request": {
+            "intent": "RESTAURANT_RESERVATION",
+            "dateTime": "2014-11-04T04:00:00+0000",
+            "partySize": 4,
+            "restaurant": "House of Prime Rib"
+        },
+        "validatedFields": [
+            {
+                "friendlyString": "For how many people?",
+                "name": "partySize",
+                "type": "Integer"
+            },
+            {
+                "friendlyString": "Where?",
+                "name": "restaurant",
+                "type": "String"
+            },
+            {
+                "friendlyString": "When?",
+                "name": "dateTime",
+                "type": "String"
+            }
+        ]
+    },
+    "error": null
+}
 ```
  
 ## POST `/request`
