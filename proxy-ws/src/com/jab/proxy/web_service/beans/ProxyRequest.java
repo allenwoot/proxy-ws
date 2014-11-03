@@ -12,6 +12,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 public class ProxyRequest {
     private String id;
     private Intent intent;
+    private String requesterId;
     private RequestStatus status;
 
     @Override
@@ -34,6 +35,10 @@ public class ProxyRequest {
         return this.intent;
     }
 
+    public String getRequesterId() {
+        return this.requesterId;
+    }
+
     public RequestStatus getStatus() {
         return this.status;
     }
@@ -49,6 +54,10 @@ public class ProxyRequest {
 
     public void setIntent(final Intent intent) {
         this.intent = intent;
+    }
+
+    public void setRequesterId(final String requesterId) {
+        this.requesterId = requesterId;
     }
 
     public void setStatus(final RequestStatus status) {

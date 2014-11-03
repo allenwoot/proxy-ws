@@ -56,6 +56,7 @@ public class RequestService {
             restaurantReservationRequest.setCreated(currentTime);
             restaurantReservationRequest.setStatus(RequestStatus.QUEUED);
             restaurantReservationRequest.setId(ProxyUtils.generateRequestId());
+            restaurantReservationRequest.setRequesterId(user.getId());
 
             // Put in data provider
             StorageClient.INSTANCE.getDataProvider().submitToQueue(user, proxyRequest);
