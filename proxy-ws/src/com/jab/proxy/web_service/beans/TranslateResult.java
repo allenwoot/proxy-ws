@@ -6,10 +6,16 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class TranslateResult extends ServerResult {
-    private List<String> missingFields;
+    private String confirmation;
+    private List<TranslationField> missingFields;
     private ProxyRequest request;
+    private List<TranslationField> validatedFields;
 
-    public List<String> getMissingFields() {
+    public String getConfirmation() {
+        return this.confirmation;
+    }
+
+    public List<TranslationField> getMissingFields() {
         return this.missingFields;
     }
 
@@ -17,11 +23,23 @@ public class TranslateResult extends ServerResult {
         return this.request;
     }
 
-    public void setMissingFields(final List<String> missingFields) {
+    public List<TranslationField> getValidatedFields() {
+        return this.validatedFields;
+    }
+
+    public void setConfirmation(final String confirmation) {
+        this.confirmation = confirmation;
+    }
+
+    public void setMissingFields(final List<TranslationField> missingFields) {
         this.missingFields = missingFields;
     }
 
     public void setRequest(final ProxyRequest request) {
         this.request = request;
+    }
+
+    public void setValidatedFields(final List<TranslationField> validatedFields) {
+        this.validatedFields = validatedFields;
     }
 }

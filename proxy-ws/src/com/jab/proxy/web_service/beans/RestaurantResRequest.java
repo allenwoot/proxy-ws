@@ -4,9 +4,18 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class RestaurantResRequest extends ProxyRequest {
+
+    public static String getConfirmation() {
+        return String.format("We'll make a reservation at $%s for $%s people at $%s.",
+                AllTranslationFields.RESTAURANT.getName(),
+                AllTranslationFields.PARTY_SIZE.getName(),
+                AllTranslationFields.DATE_TIME.getName());
+    }
+
     private String created;
     private String dateTime;
     private Integer partySize;
+
     private String restaurant;
 
     public RestaurantResRequest() {

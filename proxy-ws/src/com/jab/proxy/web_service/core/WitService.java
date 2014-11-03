@@ -16,9 +16,11 @@ import org.glassfish.grizzly.http.util.HttpStatus;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.jab.proxy.web_service.beans.AllTranslationFields;
 import com.jab.proxy.web_service.beans.Intent;
 import com.jab.proxy.web_service.beans.RestaurantResRequest;
 import com.jab.proxy.web_service.beans.TranslateResult;
+import com.jab.proxy.web_service.beans.TranslationField;
 import com.jab.proxy.web_service.beans.wit.WitResponse;
 import com.jab.proxy.web_service.exceptions.ProxyException;
 
@@ -69,21 +71,24 @@ public class WitService {
     private TranslateResult mapToRestaurantReservation(final WitResponse witResponse) {
         final TranslateResult translateResult = new TranslateResult();
         final RestaurantResRequest restaurantReservationRequest = new RestaurantResRequest();
-        final List<String> missingFields = new ArrayList<String>();
+        final List<TranslationField> missingFields = new ArrayList<TranslationField>();
+        final List<TranslationField> validatedFields = new ArrayList<TranslationField>();
         final HashMap<String, JsonElement> entitiesMap = witResponse.getOutcomes().get(0).get_entities();
 
         // Set party size
         if (entitiesMap.containsKey("party")) {
             restaurantReservationRequest.setPartySize(entitiesMap.get("party").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsInt());
+            validatedFields.add(AllTranslationFields.PARTY_SIZE.getTranslationField());
         } else {
-            missingFields.add("partySize");
+            missingFields.add(AllTranslationFields.PARTY_SIZE.getTranslationField());
         }
 
         // Set restaurant name
         if (entitiesMap.containsKey("restaurant")) {
             restaurantReservationRequest.setRestaurant(entitiesMap.get("restaurant").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsString());
+            validatedFields.add(AllTranslationFields.RESTAURANT.getTranslationField());
         } else {
-            missingFields.add("restaurant");
+            missingFields.add(AllTranslationFields.RESTAURANT.getTranslationField());
         }
 
         // Set date time
@@ -91,8 +96,9 @@ public class WitService {
             final String dateTime = entitiesMap.get("datetime").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsJsonObject().get("from").getAsString();
             final String iso86901Time = ProxyUtils.toIso8601Time(dateTime);
             restaurantReservationRequest.setDateTime(iso86901Time);
+            validatedFields.add(AllTranslationFields.DATE_TIME.getTranslationField());
         } else {
-            missingFields.add("dateTime");
+            missingFields.add(AllTranslationFields.DATE_TIME.getTranslationField());
         }
 
         // Set request
@@ -100,6 +106,10 @@ public class WitService {
         if (!missingFields.isEmpty()) {
             translateResult.setMissingFields(missingFields);
         }
+        if (!validatedFields.isEmpty()) {
+            translateResult.setValidatedFields(validatedFields);
+        }
+        translateResult.setConfirmation(RestaurantResRequest.getConfirmation());
 
         return translateResult;
     }
