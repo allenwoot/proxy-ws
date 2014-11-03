@@ -164,51 +164,41 @@ Response:
 
 ```
 {
-	“email”:”allenwoot@gmail.com”,
-	“number”:”6363366066”,
-	“firstName”:”Allen”,
-	“lastName”:”Wu”,
-	“password”:”super_secure_password”,
-	“userType”:”USER” | “WORKER”
+    "email": "allenwoot@gmail.com",
+    "number": "6363366066",
+    "firstName": "Allen",
+    "lastName": "Wu",
+    "password": "super_secure_password",
+    "userType": "USER"
 }
 ```
 __200 OK__
 ```
 {
-	“result”: {
-		“user”: {
-		  “id”:”9382938”,
-      “authToken”:”2eu89e28u90u92”,
-			“email”:”allenwoot@gmail.com”,
-			“number”:”6363366066”,
-	    “firstName”:”Allen”,
-	    “lastName”:”Wu”,
-	    “password”:”super_secure_password”,
-			“userType”:”USER” | “WORKER”
-		}
-	},
-	“error”: null
-}
-```
-
-
-```
-{
-	“number”:”6363366066”,
-	“firstName”:”Allen”,
-	“lastName”:”Wu”,
-	“password”:”doge”
+    "result": {
+        "user": {
+            "authToken": "AUTHVVNFUjE4Mjk4ODMyMjRAMTQxNDk4OTI4NjcxNg==",
+            "email": "allenwoot@gmail.com",
+            "firstName": "Allen",
+            "id": "USER1829883224",
+            "lastName": "Wu",
+            "number": "6363366066",
+            "password": "super_secure_password",
+            "userType": "USER"
+        }
+    },
+    "error": null
 }
 ```
 
 __400 BAD REQUEST__
 ```
 {
-	“result”: null
-	“error”: {
-		“code”:400
-		“message”:”Missing field {email}”
-  }
+    "result": null,
+    "error": {
+        "code": 400,
+        "message": "Missing field {email}"
+    }
 }
 ```
 
@@ -216,60 +206,49 @@ __400 BAD REQUEST__
 
 ```
 {
-	“email”:”allenwoot@gmail.com”,
-  “password”:”doge”
+    "email": "allenwoot@gmail.com",
+    "password": "doge"
 }
 ```
 __200 OK__
 ```
 {
-	“result”: {
-		“user”: {
-			“id”:”9483939”,
-			“authToken”:”2eu89e28u90u92”,
-			“email”:”allenwoot@gmail.com”,
-			“number”:”6363366066”,
-	“firstName”:”Allen”,
-	“lastName”:”Wu”,
-	“password”:”doge”
-		}
-	},
-	“error”: null
+    "result": {
+        "user": {
+            "authToken": "AUTHVVNFUjE2MzMyMzM2NjhAMTQxNDk4OTk0NDY1OA==",
+            "email": "allenwoot@gmail.com",
+            "firstName": "Allen",
+            "id": "USER1633233668",
+            "lastName": "Wu",
+            "number": "6363366066",
+            "password": "super_secure_password",
+            "userType": "USER"
+        }
+    },
+    "error": null
 }
 ```
 
+__403 FORBIDDEN__
 ```
 {
-	“email”:”allenwoot@gmail.com”,
-  “password”:”doge”
+    "result": null,
+    "error": {
+        "code": 403,
+        "message": "Authentication failed"
+    }
 }
 ```
 
-__400 (or 410?) BAD REQUEST__
-```
-{
-	“result”: null
-	“error”: {
-		“code”:410
-		“message”:”Authentication failed”
-  }
-}
-```
+An authentication token must be passed with every request (with the exception of post account and post authenticate), as a header keyed with "Auth-Token".
 
-Example of auth token use case
-Request:
-Auth-Token: 2eu89e28u90u92
-{
-	“status”:”DONE”
-}
-Response:
 401 UNAUTHORIZED
+```
 {
-	“result”: null,
-	“error”: {
-		“code”: 401,
-		“message”, “Invalid or expired auth token”
-	}
+    "result": null,
+    "error": {
+        "code": 401,
+        "message": "Invalid or expired auth token"
+    }
 }
-
-
+```
