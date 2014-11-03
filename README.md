@@ -16,7 +16,7 @@
 ## POST `/translate `
 
 ```
-{ "request":"Make a reservation tomorrow at 8pm for 4 at House of Prime Rib" } 
+{ "request":"Make a reservation tomorrow at 8pm at House of Prime Rib" } 
 ```
 
 
