@@ -24,19 +24,19 @@ __200 OK__
 ```
 {
     "result": {
-        "confirmation": "We'll make a reservation at $restaurant for $partySize people at $dateTime.",
-        "request": {
+    	"request": {
             "intent": "RESTAURANT_RESERVATION",
             "dateTime": "2014-11-04T04:00:00+0000",
-            "partySize": 4,
             "restaurant": "House of Prime Rib"
         },
-        "validatedFields": [
+        "missingFields": [
             {
                 "friendlyString": "For how many people?",
                 "name": "partySize",
                 "type": "Integer"
-            },
+            }
+        ],
+        "validatedFields": [
             {
                 "friendlyString": "Where?",
                 "name": "restaurant",
@@ -47,7 +47,8 @@ __200 OK__
                 "name": "dateTime",
                 "type": "String"
             }
-        ]
+        ],
+        "confirmation": "We'll make a reservation at $restaurant for $partySize people at $dateTime."
     },
     "error": null
 }
