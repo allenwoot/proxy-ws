@@ -57,106 +57,88 @@ __200 OK__
 ## POST `/request`
 
 ```
-{ 
-  "intent":"RESTAURANT_RESERVATION", 
-  "restaurant":"Roscoes", 
-  "partySize":4, 
-  "dateTime":"Thu, 28 Aug 2014 09:30:00 GMT" 
-} 
-
+{
+    "intent": "RESTAURANT_RESERVATION",
+    "dateTime": "2014-11-04T04:00:00+0000",
+    "partySize": 3,
+    "restaurant": "House of Prime Rib"
+}
 ```
 __200 OK__
 
 ```
-{ 
-  "result": {
-    “request”: {
-  	  "intent":"RESTAURANT_RESERVATION", 
-      "restaurant":"Roscoes", 
-      "partySize":4, 
-      "dateTime":"2014-08-27T14:20:03+00:00"
-      “id”:”38282949”,
-      “status”:”QUEUED”,
-      “created”:”2014-08-27T14:20:03+00:00”
-    } 
-  }
-  "error":null 
+{
+    "result": {
+        "request": {
+            "id": "REQUEST1946742199",
+            "intent": "RESTAURANT_RESERVATION",
+            "requesterId": "USER1633233668",
+            "status": "QUEUED",
+            "created": "2014-11-03T05:03:02+0000",
+            "dateTime": "2014-11-04T04:00:00+0000",
+            "partySize": 3,
+            "restaurant": "House of Prime Rib"
+        }
+    },
+    "error": null
 }
 ```
 __400 bad request__
 
 ```
 {
-	“result”:null,
-	“error”: {
-		“code”:400,
-		“message”:”Missing field: partySize”
-	}
+    "result": null,
+    "error": {
+        "code": 400,
+        "message": "Valid party size must be specified"
+    }
 }
 ```
 ## GET `/request?status=<status>`
 
 Gets all requests where the status is one of the enum `QUEUED`, `PROCESSING`, or `DONE`
 ```
-{ 
-  "result": { 
-    "requests": [{
-  	  "intent":"RESTAURANT_RESERVATION", 
-      "restaurant":"Roscoes", 
-      "partySize":4, 
-      "dateTime":"2014-08-27T14:20:03+00:00"
-      “id”:”38282949”,
-      “status”:”QUEUED”,
-      “created”:”2014-08-27T14:20:03+00:00”
-    }, 
-    { 
-  	  "intent":"RESTAURANT_RESERVATION", 
-      "restaurant":"House of prime rib", 
-      "partySize":2, 
-      "dateTime":"2014-08-29T14:20:03+00:00"
-      “id”:”192842”,
-      “status”:”QUEUED”,
-      “created”:”2014-08-28T14:20:03+00:00”
-    }] 
-  }, 
-  "error":null 
-} 
+{
+    "result": {
+        "requests": [
+            {
+                "id": "REQUEST1946742199",
+                "intent": "RESTAURANT_RESERVATION",
+                "requesterId": "USER1633233668",
+                "status": "QUEUED",
+                "created": "2014-11-03T05:03:02+0000",
+                "dateTime": "2014-11-04T04:00:00+0000",
+                "partySize": 3,
+                "restaurant": "House of Prime Rib"
+            }
+        ]
+    },
+    "error": null
+}
 ```
 
 ## PUT `/request/id/<id>`
 ```
 {
-	“status”:”DONE”
+    "status": "DONE"
 }
 ```
 __200 OK__
 ```
 {
-	“result”: {
-  	"intent":"RESTAURANT_RESERVATION", 
-    "restaurant":"House of prime rib", 
-    "partySize":2, 
-    "dateTime":"2014-08-29T14:20:03+00:00"
-    “id”:”192842”,
-    “status”:”DONE”,
-    “created”:”2014-08-28T14:20:03+00:00”
-	},
-	“error”:null
-}
-```
-```
-{
-}
-```
-__400 bad request__
-```
-Response:
-{
-	“result”: null,
-	“error”: {
-		“code”:400,
-		“message”:”Request must contain a status”
-	}
+    "result": {
+        "request": {
+            "id": "REQUEST1946742199",
+            "intent": "RESTAURANT_RESERVATION",
+            "requesterId": "USER1633233668",
+            "status": "DONE",
+            "created": "2014-11-03T05:03:02+0000",
+            "dateTime": "2014-11-04T04:00:00+0000",
+            "partySize": 3,
+            "restaurant": "House of Prime Rib"
+        }
+    },
+    "error": null
 }
 ```
 
@@ -164,51 +146,41 @@ Response:
 
 ```
 {
-	“email”:”allenwoot@gmail.com”,
-	“number”:”6363366066”,
-	“firstName”:”Allen”,
-	“lastName”:”Wu”,
-	“password”:”super_secure_password”,
-	“userType”:”USER” | “WORKER”
+    "email": "allenwoot@gmail.com",
+    "number": "6363366066",
+    "firstName": "Allen",
+    "lastName": "Wu",
+    "password": "super_secure_password",
+    "userType": "USER"
 }
 ```
 __200 OK__
 ```
 {
-	“result”: {
-		“user”: {
-		  “id”:”9382938”,
-      “authToken”:”2eu89e28u90u92”,
-			“email”:”allenwoot@gmail.com”,
-			“number”:”6363366066”,
-	    “firstName”:”Allen”,
-	    “lastName”:”Wu”,
-	    “password”:”super_secure_password”,
-			“userType”:”USER” | “WORKER”
-		}
-	},
-	“error”: null
-}
-```
-
-
-```
-{
-	“number”:”6363366066”,
-	“firstName”:”Allen”,
-	“lastName”:”Wu”,
-	“password”:”doge”
+    "result": {
+        "user": {
+            "authToken": "AUTHVVNFUjE4Mjk4ODMyMjRAMTQxNDk4OTI4NjcxNg==",
+            "email": "allenwoot@gmail.com",
+            "firstName": "Allen",
+            "id": "USER1829883224",
+            "lastName": "Wu",
+            "number": "6363366066",
+            "password": "super_secure_password",
+            "userType": "USER"
+        }
+    },
+    "error": null
 }
 ```
 
 __400 BAD REQUEST__
 ```
 {
-	“result”: null
-	“error”: {
-		“code”:400
-		“message”:”Missing field {email}”
-  }
+    "result": null,
+    "error": {
+        "code": 400,
+        "message": "Missing field {email}"
+    }
 }
 ```
 
@@ -216,60 +188,49 @@ __400 BAD REQUEST__
 
 ```
 {
-	“email”:”allenwoot@gmail.com”,
-  “password”:”doge”
+    "email": "allenwoot@gmail.com",
+    "password": "doge"
 }
 ```
 __200 OK__
 ```
 {
-	“result”: {
-		“user”: {
-			“id”:”9483939”,
-			“authToken”:”2eu89e28u90u92”,
-			“email”:”allenwoot@gmail.com”,
-			“number”:”6363366066”,
-	“firstName”:”Allen”,
-	“lastName”:”Wu”,
-	“password”:”doge”
-		}
-	},
-	“error”: null
+    "result": {
+        "user": {
+            "authToken": "AUTHVVNFUjE2MzMyMzM2NjhAMTQxNDk4OTk0NDY1OA==",
+            "email": "allenwoot@gmail.com",
+            "firstName": "Allen",
+            "id": "USER1633233668",
+            "lastName": "Wu",
+            "number": "6363366066",
+            "password": "super_secure_password",
+            "userType": "USER"
+        }
+    },
+    "error": null
 }
 ```
 
+__403 FORBIDDEN__
 ```
 {
-	“email”:”allenwoot@gmail.com”,
-  “password”:”doge”
+    "result": null,
+    "error": {
+        "code": 403,
+        "message": "Authentication failed"
+    }
 }
 ```
 
-__400 (or 410?) BAD REQUEST__
-```
-{
-	“result”: null
-	“error”: {
-		“code”:410
-		“message”:”Authentication failed”
-  }
-}
-```
+An authentication token must be passed with every request (with the exception of post account and post authenticate), as a header keyed with "Auth-Token".
 
-Example of auth token use case
-Request:
-Auth-Token: 2eu89e28u90u92
-{
-	“status”:”DONE”
-}
-Response:
 401 UNAUTHORIZED
+```
 {
-	“result”: null,
-	“error”: {
-		“code”: 401,
-		“message”, “Invalid or expired auth token”
-	}
+    "result": null,
+    "error": {
+        "code": 401,
+        "message": "Invalid or expired auth token"
+    }
 }
-
-
+```
