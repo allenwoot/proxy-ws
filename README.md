@@ -57,106 +57,88 @@ __200 OK__
 ## POST `/request`
 
 ```
-{ 
-  "intent":"RESTAURANT_RESERVATION", 
-  "restaurant":"Roscoes", 
-  "partySize":4, 
-  "dateTime":"Thu, 28 Aug 2014 09:30:00 GMT" 
-} 
-
+{
+    "intent": "RESTAURANT_RESERVATION",
+    "dateTime": "2014-11-04T04:00:00+0000",
+    "partySize": 3,
+    "restaurant": "House of Prime Rib"
+}
 ```
 __200 OK__
 
 ```
-{ 
-  "result": {
-    “request”: {
-  	  "intent":"RESTAURANT_RESERVATION", 
-      "restaurant":"Roscoes", 
-      "partySize":4, 
-      "dateTime":"2014-08-27T14:20:03+00:00"
-      “id”:”38282949”,
-      “status”:”QUEUED”,
-      “created”:”2014-08-27T14:20:03+00:00”
-    } 
-  }
-  "error":null 
+{
+    "result": {
+        "request": {
+            "id": "REQUEST1946742199",
+            "intent": "RESTAURANT_RESERVATION",
+            "requesterId": "USER1633233668",
+            "status": "QUEUED",
+            "created": "2014-11-03T05:03:02+0000",
+            "dateTime": "2014-11-04T04:00:00+0000",
+            "partySize": 3,
+            "restaurant": "House of Prime Rib"
+        }
+    },
+    "error": null
 }
 ```
 __400 bad request__
 
 ```
 {
-	“result”:null,
-	“error”: {
-		“code”:400,
-		“message”:”Missing field: partySize”
-	}
+    "result": null,
+    "error": {
+        "code": 400,
+        "message": "Valid party size must be specified"
+    }
 }
 ```
 ## GET `/request?status=<status>`
 
 Gets all requests where the status is one of the enum `QUEUED`, `PROCESSING`, or `DONE`
 ```
-{ 
-  "result": { 
-    "requests": [{
-  	  "intent":"RESTAURANT_RESERVATION", 
-      "restaurant":"Roscoes", 
-      "partySize":4, 
-      "dateTime":"2014-08-27T14:20:03+00:00"
-      “id”:”38282949”,
-      “status”:”QUEUED”,
-      “created”:”2014-08-27T14:20:03+00:00”
-    }, 
-    { 
-  	  "intent":"RESTAURANT_RESERVATION", 
-      "restaurant":"House of prime rib", 
-      "partySize":2, 
-      "dateTime":"2014-08-29T14:20:03+00:00"
-      “id”:”192842”,
-      “status”:”QUEUED”,
-      “created”:”2014-08-28T14:20:03+00:00”
-    }] 
-  }, 
-  "error":null 
-} 
+{
+    "result": {
+        "requests": [
+            {
+                "id": "REQUEST1946742199",
+                "intent": "RESTAURANT_RESERVATION",
+                "requesterId": "USER1633233668",
+                "status": "QUEUED",
+                "created": "2014-11-03T05:03:02+0000",
+                "dateTime": "2014-11-04T04:00:00+0000",
+                "partySize": 3,
+                "restaurant": "House of Prime Rib"
+            }
+        ]
+    },
+    "error": null
+}
 ```
 
 ## PUT `/request/id/<id>`
 ```
 {
-	“status”:”DONE”
+    "status": "DONE"
 }
 ```
 __200 OK__
 ```
 {
-	“result”: {
-  	"intent":"RESTAURANT_RESERVATION", 
-    "restaurant":"House of prime rib", 
-    "partySize":2, 
-    "dateTime":"2014-08-29T14:20:03+00:00"
-    “id”:”192842”,
-    “status”:”DONE”,
-    “created”:”2014-08-28T14:20:03+00:00”
-	},
-	“error”:null
-}
-```
-```
-{
-}
-```
-__400 bad request__
-```
-Response:
-{
-	“result”: null,
-	“error”: {
-		“code”:400,
-		“message”:”Request must contain a status”
-	}
+    "result": {
+        "request": {
+            "id": "REQUEST1946742199",
+            "intent": "RESTAURANT_RESERVATION",
+            "requesterId": "USER1633233668",
+            "status": "DONE",
+            "created": "2014-11-03T05:03:02+0000",
+            "dateTime": "2014-11-04T04:00:00+0000",
+            "partySize": 3,
+            "restaurant": "House of Prime Rib"
+        }
+    },
+    "error": null
 }
 ```
 
