@@ -25,12 +25,12 @@ public class RequestService {
     /**
      * Gets all results from the queue with the specified status
      */
-    public GetQueueResult getRequestsByStatus(final RequestStatus status) throws ProxyException {
+    public GetQueueResult getRequestsByStatus(final User user, final RequestStatus status) throws ProxyException {
         if (status == null) {
             throw new ProxyException("Valid status must be specified", HttpStatus.BAD_REQUEST_400);
         }
 
-        return new GetQueueResult(StorageClient.INSTANCE.getDataProvider().getRequestsByStatus(status));
+        return new GetQueueResult(StorageClient.INSTANCE.getDataProvider().getRequestsByStatus(user, status));
     }
 
     /**

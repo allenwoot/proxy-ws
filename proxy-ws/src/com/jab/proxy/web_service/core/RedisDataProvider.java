@@ -50,9 +50,18 @@ public enum RedisDataProvider implements DataProvider {
     }
 
     @Override
-    public List<ProxyRequest> getRequestsByStatus(final RequestStatus status) {
+    public List<ProxyRequest> getRequestsByStatus(final User user, final RequestStatus status) {
         // Get the ID list from the status
-        final List<String> ids = this.jedis.lrange(status.name(), 0, 100);
+        List<String> ids = null;
+        switch (user.getUserType()) {
+        case USER:
+            ids = this.jedis.lrange(status.name(), 0, 10);
+            break;
+        case WORKER:
+            ids = this.jedis.lrange(user.getId() + status.name(), 0, 10);
+            break;
+        }
+
         final List<ProxyRequest> requests = new ArrayList<ProxyRequest>();
 
         // For each ID, get the json string value and deserialize it into the object
@@ -110,6 +119,7 @@ public enum RedisDataProvider implements DataProvider {
 
         // Add request to the list of queued IDs
         this.jedis.rpush(RequestStatus.QUEUED.name(), proxyRequest.getId());
+        this.jedis.rpush(user.getId() + RequestStatus.QUEUED.name(), proxyRequest.getId());
 
         // Save
         return "OK".equals(this.jedis.save());
@@ -164,9 +174,13 @@ public enum RedisDataProvider implements DataProvider {
         final String newJsonString = ProxyUtils.toJsonString(restaurantReservationRequest);
         this.jedis.set(id, newJsonString);
 
-        // Remove from old status list and add to new status list
+        // Remove from old global status list and add to new global status list
         this.jedis.lrem(oldStatus.name(), 1, id);
         this.jedis.rpush(status.name(), id);
+
+        // Remove from old user status list and add to new user status list
+        this.jedis.lrem(restaurantReservationRequest.getRequesterId() + oldStatus.name(), 1, id);
+        this.jedis.rpush(restaurantReservationRequest.getRequesterId() + status.name(), id);
 
         // Save
         this.jedis.save();

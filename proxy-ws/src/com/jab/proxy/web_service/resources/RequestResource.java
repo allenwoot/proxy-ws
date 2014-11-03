@@ -42,7 +42,9 @@ public class RequestResource {
     @Produces(MediaType.APPLICATION_JSON)
     public ServerResponse getRequestsByStatus(@QueryParam("status") final String status) throws ProxyException {
         final RequestService requestService = new RequestService(this.requestContext);
-        return new ServerResponse(requestService.getRequestsByStatus(RequestStatus.fromString(status)));
+        final String userId = ProxyUtils.extractIdFromAuthToken(this.servletRequest.getHeader("Auth-Token"));
+        final User user = StorageClient.INSTANCE.getDataProvider().getUserById(userId);
+        return new ServerResponse(requestService.getRequestsByStatus(user, RequestStatus.fromString(status)));
     }
 
     /**

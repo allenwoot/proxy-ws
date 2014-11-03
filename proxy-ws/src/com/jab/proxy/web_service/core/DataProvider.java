@@ -20,7 +20,7 @@ public interface DataProvider {
     /**
      * Gets all requests with a given status
      */
-    public List<ProxyRequest> getRequestsByStatus(RequestStatus status);
+    public List<ProxyRequest> getRequestsByStatus(User user, RequestStatus status);
 
     /**
      * Registers a user
