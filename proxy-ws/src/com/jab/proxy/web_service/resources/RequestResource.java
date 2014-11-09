@@ -18,10 +18,10 @@ import com.jab.proxy.web_service.beans.RequestStatus;
 import com.jab.proxy.web_service.beans.RestaurantResRequest;
 import com.jab.proxy.web_service.beans.ServerResponse;
 import com.jab.proxy.web_service.beans.User;
-import com.jab.proxy.web_service.core.ProxyUtils;
 import com.jab.proxy.web_service.core.RequestService;
 import com.jab.proxy.web_service.core.StorageClient;
 import com.jab.proxy.web_service.exceptions.ProxyException;
+import com.jab.proxy.web_service.utilities.ProxyUtils;
 
 /**
  * Defines the request endpoint

@@ -13,9 +13,9 @@ import javax.ws.rs.core.Request;
 import com.jab.proxy.web_service.beans.ServerResponse;
 import com.jab.proxy.web_service.beans.User;
 import com.jab.proxy.web_service.core.AccountService;
-import com.jab.proxy.web_service.core.ProxyUtils;
 import com.jab.proxy.web_service.core.StorageClient;
 import com.jab.proxy.web_service.exceptions.ProxyException;
+import com.jab.proxy.web_service.utilities.ProxyUtils;
 
 /**
  * Defines the account endpoint

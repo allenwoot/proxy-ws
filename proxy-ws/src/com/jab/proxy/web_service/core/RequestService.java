@@ -11,6 +11,8 @@ import com.jab.proxy.web_service.beans.RequestStatus;
 import com.jab.proxy.web_service.beans.RestaurantResRequest;
 import com.jab.proxy.web_service.beans.User;
 import com.jab.proxy.web_service.exceptions.ProxyException;
+import com.jab.proxy.web_service.utilities.GmailNotifier;
+import com.jab.proxy.web_service.utilities.ProxyUtils;
 
 /**
  * Provides a service to serve requests to the request endpoint
@@ -62,6 +64,7 @@ public class RequestService {
             StorageClient.INSTANCE.getDataProvider().submitToQueue(user, proxyRequest);
         }
 
+        GmailNotifier.notifySubmittedRequest(user, proxyRequest);
         return new PostQueueResult(proxyRequest);
     }
 

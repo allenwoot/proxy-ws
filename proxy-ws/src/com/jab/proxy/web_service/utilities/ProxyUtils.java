@@ -1,4 +1,4 @@
-package com.jab.proxy.web_service.core;
+package com.jab.proxy.web_service.utilities;
 
 import java.io.IOException;
 import java.text.DateFormat;

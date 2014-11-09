@@ -8,8 +8,8 @@ import javax.ws.rs.core.Response.ResponseBuilder;
 import org.glassfish.grizzly.http.util.HttpStatus;
 
 import com.jab.proxy.web_service.beans.ServerError;
-import com.jab.proxy.web_service.core.ProxyUtils;
 import com.jab.proxy.web_service.core.StorageClient;
+import com.jab.proxy.web_service.utilities.ProxyUtils;
 import com.sun.jersey.spi.container.ContainerRequest;
 import com.sun.jersey.spi.container.ContainerRequestFilter;
 

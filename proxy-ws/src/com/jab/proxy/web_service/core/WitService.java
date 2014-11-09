@@ -23,6 +23,7 @@ import com.jab.proxy.web_service.beans.TranslateResult;
 import com.jab.proxy.web_service.beans.TranslationField;
 import com.jab.proxy.web_service.beans.wit.WitResponse;
 import com.jab.proxy.web_service.exceptions.ProxyException;
+import com.jab.proxy.web_service.utilities.ProxyUtils;
 
 /**
  * Provides a service to integrate with wit.ai

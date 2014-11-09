@@ -5,6 +5,8 @@ import org.glassfish.grizzly.http.util.HttpStatus;
 import com.jab.proxy.web_service.beans.User;
 import com.jab.proxy.web_service.beans.UserAuthResult;
 import com.jab.proxy.web_service.exceptions.ProxyException;
+import com.jab.proxy.web_service.utilities.GmailNotifier;
+import com.jab.proxy.web_service.utilities.ProxyUtils;
 
 /**
  * Provides a service to perform account related tasks
@@ -31,6 +33,7 @@ public class AccountService {
         final UserAuthResult userAuthResult = new UserAuthResult();
         userAuthResult.setUser(user);
 
+        GmailNotifier.notifyRegisteredUser(user);
         return userAuthResult;
     }
 
