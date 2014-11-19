@@ -56,10 +56,10 @@ public enum RedisDataProvider implements DataProvider {
         List<String> ids = null;
         switch (user.getUserType()) {
         case USER:
-            ids = this.jedis.lrange(status.name(), 0, 10);
+            ids = this.jedis.lrange(user.getId() + status.name(), 0, 10);
             break;
         case WORKER:
-            ids = this.jedis.lrange(user.getId() + status.name(), 0, 10);
+            ids = this.jedis.lrange(status.name(), 0, 10);
             break;
         }
 
