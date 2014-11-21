@@ -5,6 +5,7 @@ import org.codehaus.jackson.map.annotate.JsonSerialize;
 @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class User {
     private String authToken;
+    private String deviceToken;
     private String email;
     private String firstName;
     private String id;
@@ -15,6 +16,10 @@ public class User {
 
     public String getAuthToken() {
         return this.authToken;
+    }
+
+    public String getDeviceToken() {
+        return this.deviceToken;
     }
 
     public String getEmail() {
@@ -47,6 +52,10 @@ public class User {
 
     public void setAuthToken(final String authToken) {
         this.authToken = authToken;
+    }
+
+    public void setDeviceToken(final String deviceToken) {
+        this.deviceToken = deviceToken;
     }
 
     public void setEmail(final String email) {
