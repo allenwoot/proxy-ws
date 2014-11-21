@@ -151,7 +151,8 @@ __200 OK__
     "firstName": "Allen",
     "lastName": "Wu",
     "password": "super_secure_password",
-    "userType": "USER"
+    "userType": "USER",
+    "deviceToken": "203f9j0293jf092j3"
 }
 ```
 __200 OK__
@@ -166,7 +167,8 @@ __200 OK__
             "lastName": "Wu",
             "number": "6363366066",
             "password": "super_secure_password",
-            "userType": "USER"
+            "userType": "USER",
+            "deviceToken": "203f9j0293jf092j3"
         }
     },
     "error": null
@@ -204,7 +206,8 @@ __200 OK__
             "lastName": "Wu",
             "number": "6363366066",
             "password": "super_secure_password",
-            "userType": "USER"
+            "userType": "USER",
+            "deviceToken": "203f9j0293jf092j3"
         }
     },
     "error": null
