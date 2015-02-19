@@ -1,7 +1,9 @@
 package com.jab.proxy.web_service.beans;
 
+import java.util.Date;
+
 public enum AllTranslationFields {
-    DATE_TIME("dateTime", String.class.getSimpleName(), "When?"),
+    DATE_TIME("dateTime", Date.class.getSimpleName(), "When?"),
     PARTY_SIZE("partySize", Integer.class.getSimpleName(), "For how many people?"),
     RESTAURANT("restaurant", String.class.getSimpleName(), "Where?");
 

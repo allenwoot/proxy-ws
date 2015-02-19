@@ -79,7 +79,9 @@ public class WitService {
         // Set party size
         if (entitiesMap.containsKey("party")) {
             restaurantReservationRequest.setPartySize(entitiesMap.get("party").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsInt());
-            validatedFields.add(AllTranslationFields.PARTY_SIZE.getTranslationField());
+            final TranslationField translationField = AllTranslationFields.PARTY_SIZE.getTranslationField();
+            translationField.setValue(restaurantReservationRequest.getPartySize().toString());
+            validatedFields.add(translationField);
         } else {
             missingFields.add(AllTranslationFields.PARTY_SIZE.getTranslationField());
         }
@@ -87,7 +89,9 @@ public class WitService {
         // Set restaurant name
         if (entitiesMap.containsKey("restaurant")) {
             restaurantReservationRequest.setRestaurant(entitiesMap.get("restaurant").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsString());
-            validatedFields.add(AllTranslationFields.RESTAURANT.getTranslationField());
+            final TranslationField translationField = AllTranslationFields.RESTAURANT.getTranslationField();
+            translationField.setValue(restaurantReservationRequest.getRestaurant());
+            validatedFields.add(translationField);
         } else {
             missingFields.add(AllTranslationFields.RESTAURANT.getTranslationField());
         }
@@ -97,13 +101,15 @@ public class WitService {
             final String dateTime = entitiesMap.get("datetime").getAsJsonArray().get(0).getAsJsonObject().get("value").getAsJsonObject().get("from").getAsString();
             final String iso86901Time = ProxyUtils.toIso8601Time(dateTime);
             restaurantReservationRequest.setDateTime(iso86901Time);
-            validatedFields.add(AllTranslationFields.DATE_TIME.getTranslationField());
+            final TranslationField translationField = AllTranslationFields.DATE_TIME.getTranslationField();
+            translationField.setValue(restaurantReservationRequest.getDateTime());
+            validatedFields.add(translationField);
         } else {
             missingFields.add(AllTranslationFields.DATE_TIME.getTranslationField());
         }
 
-        // Set request
-        translateResult.setRequest(restaurantReservationRequest);
+        // Set intent
+        translateResult.setIntent(restaurantReservationRequest.getIntent());
         if (!missingFields.isEmpty()) {
             translateResult.setMissingFields(missingFields);
         }

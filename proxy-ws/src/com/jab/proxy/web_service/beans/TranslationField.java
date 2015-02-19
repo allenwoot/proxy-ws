@@ -4,6 +4,15 @@ public class TranslationField {
     private String friendlyString;
     private String name;
     private String type;
+    private String value;
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
 
     public String getFriendlyString() {
         return this.friendlyString;
