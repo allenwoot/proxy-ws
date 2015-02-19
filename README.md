@@ -24,28 +24,26 @@ __200 OK__
 ```
 {
     "result": {
-    	"request": {
-            "intent": "RESTAURANT_RESERVATION",
-            "dateTime": "2014-11-04T04:00:00+0000",
-            "restaurant": "House of Prime Rib"
-        },
+    	"intent": "RESTAURANT_RESERVATION",
         "missingFields": [
             {
                 "friendlyString": "For how many people?",
                 "name": "partySize",
-                "type": "Integer"
+                "type": "Integer",
             }
         ],
         "validatedFields": [
             {
                 "friendlyString": "Where?",
                 "name": "restaurant",
-                "type": "String"
+                "type": "String",
+                "value": "House of Prime Rib"
             },
             {
                 "friendlyString": "When?",
                 "name": "dateTime",
-                "type": "String"
+                "type": "String",
+                "value": "2014-11-04T04:00:00+0000"
             }
         ],
         "confirmation": "We'll make a reservation at $restaurant for $partySize people at $dateTime."
